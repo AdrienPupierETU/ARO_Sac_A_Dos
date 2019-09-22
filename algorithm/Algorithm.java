@@ -1,23 +1,26 @@
 package algorithm;
 
 import ReadInput.ReadFile;
+import tree.Parcours;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Algorithm {
-    public static int backpackweight =18;
-    private static final String FILENAME="fileInput/Sac0";
+    public static int backpackweight;
+    private static final String FILENAME="fileInput/Sac1";
     public static  void main(String args[]){
 
 
         List<Item> remainingItems= ReadFile.read(FILENAME);
-        List<Item> itemsTaken= new ArrayList<>();
         System.out.println(remainingItems);
         Collections.sort(remainingItems, Collections.reverseOrder());
         double res=OptimumWithTaken(remainingItems, backpackweight);
         System.out.println(res);
+        Parcours parcours= new Parcours();
+        parcours.parcoursWithBound(remainingItems,backpackweight,0);
+        System.out.println("parcours : Value = "+parcours.MaxValue+" items= " +parcours.MaxState);
     }
 
     public static double OptimumWithTaken(List<Item> items,int backpackWeight){
@@ -25,9 +28,9 @@ public class Algorithm {
         int remainingWeight=backpackWeight;
         int valueFromAlreadyTakenItem=0;
         for(Item i: items){
-            if(i.taken==0){
+            if(i.getTaken()==0){
                 onlyNotTaken.add(i);
-            }else if(i.taken==1){
+            }else if(i.getTaken()==1){
                 remainingWeight-=i.weight;
                 valueFromAlreadyTakenItem+=i.value;
             }

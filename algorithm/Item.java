@@ -9,7 +9,7 @@ public class Item implements Comparable{
        1 : taken
        2 : not taken and decision was made
      */
-    public int taken;
+    private int taken;
 
     public Item(int weight, int value) {
         this.weight = weight;
@@ -29,6 +29,10 @@ public class Item implements Comparable{
         this.taken = taken;
     }
 
+    public int getTaken() {
+        return taken;
+    }
+
     public int compareTo(Object o) {
         Item comparedTo= (Item) o;
         double result=this.getValue()-comparedTo.getValue();
@@ -46,6 +50,7 @@ public class Item implements Comparable{
         return "Item{" +
                 "weight=" + weight +
                 ", value=" + value +
+                ", taken=" + taken +
                 '}';
     }
 }

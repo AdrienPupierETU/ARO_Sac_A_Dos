@@ -1,26 +1,22 @@
 package algorithm;
 
+import ReadInput.ReadFile;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Algorithm {
-
+    public static int backpackweight =18;
+    private static final String FILENAME="fileInput/Sac0";
     public static  void main(String args[]){
-        final int  BACKPACKWEIGHT=18;
 
-        List<Item> RemainingItems= new ArrayList<Item>();
-        List<Item> itemsTaken= new ArrayList<Item>();
 
-        RemainingItems.add(new Item(4,48));
-        RemainingItems.add(new Item(10,200));
-        RemainingItems.add(new Item(2,30));
-        RemainingItems.add(new Item(3,30));
-        RemainingItems.add(new Item(5,80));
-
-        RemainingItems.get(0).taken=1;
-        Collections.sort(RemainingItems, Collections.reverseOrder());
-        double res=OptimumWithTaken(RemainingItems,BACKPACKWEIGHT);
+        List<Item> remainingItems= ReadFile.read(FILENAME);
+        List<Item> itemsTaken= new ArrayList<>();
+        System.out.println(remainingItems);
+        Collections.sort(remainingItems, Collections.reverseOrder());
+        double res=OptimumWithTaken(remainingItems, backpackweight);
         System.out.println(res);
     }
 

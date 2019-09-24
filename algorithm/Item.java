@@ -5,20 +5,22 @@ public class Item implements Comparable{
 
     public double weight;
     public double value;
-    /* 0 : Pending desicion (not taken)
+    public double ratio;
+    /* 0 : Pending decision (not taken)
        1 : taken
        2 : not taken and decision was made
      */
     private int taken;
 
-    public Item(int weight, int value) {
+    public Item(double weight, double value) {
         this.weight = weight;
         this.value = value;
+        this.ratio = value/weight;
         this.taken=0;
     }
 
     public double getValue(){
-        return value/weight;
+        return value;
     }
 
     public void setTaken(int taken) {
@@ -35,7 +37,7 @@ public class Item implements Comparable{
 
     public int compareTo(Object o) {
         Item comparedTo= (Item) o;
-        double result=this.getValue()-comparedTo.getValue();
+        double result=(this.ratio-comparedTo.ratio);
         if(result==0){
             return 0;
         }else if(result>0){
@@ -51,6 +53,7 @@ public class Item implements Comparable{
                 "weight=" + weight +
                 ", value=" + value +
                 ", taken=" + taken +
+                ", ratio=" + ratio +
                 '}';
     }
 }

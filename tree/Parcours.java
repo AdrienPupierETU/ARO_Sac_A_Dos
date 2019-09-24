@@ -7,46 +7,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parcours {
-    public List<Boolean> MaxState= new ArrayList<>();
-    public int MaxValue=0;
+    public static List<Boolean> MaxState= new ArrayList<>();
+    public double MaxValue=0;
 
-    public void parcoursWithBound(List<Item> items,double weightRemaining,int height){
-        if(items.size()-1>=height){ //node
-            if(weightRemaining-items.get(height).weight>0){
+    public void BranchAndBound(List<Item> items, int weightRemaining, int height,double value){
+        if(items.size()>height &&Algorithm.getOptimumFractionaire(items,weightRemaining,height,value)>MaxValue){ //node
+            if(weightRemaining-items.get(height).weight>=0){
                 items.get(height).setTaken(1);
-                if(Algorithm.OptimumWithHeight(items,weightRemaining,height)>MaxValue){
-                    parcoursWithBound(items,(weightRemaining-items.get(height).weight),height+1); //left
-                }
-
+                BranchAndBound(items,(weightRemaining-items.get(height).weight),height+1,value+items.get(height).value); //left (taken)
             }
             items.get(height).setTaken(2);
-            if(Algorithm.OptimumWithHeight(items,weightRemaining,height)>MaxValue){
-                parcoursWithBound(items,weightRemaining,height+1); //right
-            }
-
+            BranchAndBound(items,weightRemaining,height+1,value); //right (not taken)
         }else{ //feuille
-            int value=0;
-            for(Item i: items){
-                if(i.getTaken()==1){
-                    value+=i.value;
-                }
-            }
-            if(MaxValue<value){
-                if(MaxState.size()!=items.size()){
-                    for(int i =0;i<items.size();i++){
-                        MaxState.add(false);
-                    }
-                }
-                for(int i =0;i<items.size();i++){
-                    if(items.get(i).getTaken()==1){
-                        MaxState.set(i,true);
-                    }else {
-                        MaxState.set(i, false);
-                    }
-                }
-                MaxValue=value;
-            }
+            setValueAndState(items,value);
         }
     }
 
+
+    private void setValueAndState(List<Item> items,double value){
+        if(MaxValue<value){
+            if(MaxState.size()!=items.size()){
+                for(int i =0;i<items.size();i++){
+                    MaxState.add(false);
+                }
+            }
+            for(int i =0;i<items.size();i++){
+                if(items.get(i).getTaken()==1){
+                    MaxState.set(i,true);
+                }else {
+                    MaxState.set(i, false);
+                }
+            }
+            MaxValue=value;
+        }
+    }
 }

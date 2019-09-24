@@ -3,8 +3,8 @@ package algorithm;
 public class Item implements Comparable{
 
 
-    public double weight;
-    public double value;
+    public int weight;
+    public int value;
     public double ratio;
     /* 0 : Pending decision (not taken)
        1 : taken
@@ -12,10 +12,10 @@ public class Item implements Comparable{
      */
     private int taken;
 
-    public Item(double weight, double value) {
+    public Item(int weight, int value) {
         this.weight = weight;
         this.value = value;
-        this.ratio = value/weight;
+        this.ratio =(double) value/weight;
         this.taken=0;
     }
 

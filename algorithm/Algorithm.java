@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Algorithm {
     public static int backpackweight;
-    private static final String FILENAME="src/fileInput/Sac2";
+    private static final String FILENAME="src/fileInput/Sac4";
     public static  void main(String args[]){
 
 
@@ -17,65 +17,39 @@ public class Algorithm {
         System.out.println(items);
         Collections.sort(items, Collections.reverseOrder());
         System.out.println(items);
-        double res=getOptimumFractionaire(items, backpackweight);
+        double res=getOptimumFractionaire(items, backpackweight,0,0);
         System.out.println(res);
         Parcours parcours= new Parcours();
-        parcours.parcoursWithBound(items,backpackweight,0);
+        parcours.BranchAndBound(items,backpackweight,0,0);
         System.out.println("parcours : Value = "+parcours.MaxValue+" items= " +parcours.MaxState);
-    }
-
-    public static double OptimumWithTaken(List<Item> items,int backpackWeight){
-        List<Item> onlyNotTaken = new ArrayList<>();
-        int remainingWeight=backpackWeight;
-        int valueFromAlreadyTakenItem=0;
-        for(Item i: items){
-            if(i.getTaken()==0){
-                onlyNotTaken.add(i);
-            }else if(i.getTaken()==1){
-                remainingWeight-=i.weight;
-                valueFromAlreadyTakenItem+=i.value;
-            }
-        }
-        return valueFromAlreadyTakenItem+getOptimumFractionaire(onlyNotTaken,remainingWeight);
-    }
-
-    public static double OptimumWithHeight(List<Item> items,double RemainingBackpackWeight,int height){
-        List<Item> toDoOptimum = new ArrayList<>();
-        for(int i=height+1;i<items.size();i++){
-            toDoOptimum.add(items.get(i));
-        }
         int value=0;
-        for(int j=0;j<=height;j++){
-            Item courant = items.get(j);
-            if(courant.getTaken()==1){
-                value+=courant.value;
+        for(int i =0;i<items.size();i++){
+            if(Parcours.MaxState.get(i)){
+                value+=items.get(i).value;
             }
         }
-        return value+getOptimumFractionaire(toDoOptimum,RemainingBackpackWeight);
+        System.out.println(value);
     }
 
 
     /* @Param : list in decreasing order and max Weight in backpack
        @Return: High boundary limit of the backpack problems
      */
-    public static double  getOptimumFractionaire(List<Item> items,double backpackWeight){
+    public static double  getOptimumFractionaire(List<Item> items,int backpackWeight,int height,double value){
         double result=0;
-        double actualWeightUse=0;
-        for(Item i : items){
-            if(actualWeightUse==backpackWeight){
-                break;
-            }
-
-            if(actualWeightUse+i.weight<=backpackWeight){
-                actualWeightUse+=i.weight;
-                result+=i.value;
+        int actualWeightUse=0;
+        for(int i =height;i<items.size();i++){
+            Item courant=items.get(i);
+            if(actualWeightUse+courant.weight<=backpackWeight){
+                actualWeightUse+=courant.weight;
+                result+=courant.value;
             }else{
                 double remainingSpace=backpackWeight-actualWeightUse;
-                actualWeightUse=backpackWeight;
-                double ratio=remainingSpace/i.weight;
-                result+=ratio*i.value;
+                double ratio=remainingSpace/courant.weight;
+                result+=ratio*courant.value;
+                break;
             }
         }
-        return result;
+        return value+result;
     }
 }
